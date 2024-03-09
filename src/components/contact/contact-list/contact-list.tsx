@@ -16,8 +16,12 @@ import {
 } from "@/utils/sort-by-first-last-name/sort-by-first-last-name";
 import { useGetContactsQuery } from "@/api/contact/@query/use-get-contacts/use-get-contacts";
 import ContactModalAddEdit from "../contact-modal-add-edit/contact-modal-add-edit";
+import { useAppSelector } from "@/store/store";
 
 const ContactList = () => {
+  const contact = useAppSelector((state) => state.contact.contact);
+  console.log("contact-list", contact);
+
   const [
     isAscending,
 

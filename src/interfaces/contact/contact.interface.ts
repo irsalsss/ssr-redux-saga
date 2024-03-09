@@ -8,4 +8,6 @@ interface ContactInterface {
 
 export type ContactFormField = Omit<ContactInterface, "id">;
 
+export type ContactsInterface = Array<ContactInterface>;
+
 export default ContactInterface;

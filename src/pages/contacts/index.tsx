@@ -1,24 +1,29 @@
-import { prefetchGetContactsQuery } from "@/api/contact/@query/use-get-contacts/use-get-contacts";
 import ContactContainer from "@/components/contact/contact-container/contact-container";
-import queryClient from "@/utils/query-client/query-client";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import ContactActionEnum from "@/enum/contact/contact-action.enum";
+import { useAppSelector, wrapper } from "@/store/store";
+import { END } from "redux-saga";
 
 const ContactsPage = () => {
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <ContactContainer />
-    </HydrationBoundary>
-  );
+  const contact = useAppSelector((state) => state.contact.contact);
+  console.log("contact", contact);
+
+  return <ContactContainer />;
 };
 
-export const getServerSideProps = async () => {
-  await prefetchGetContactsQuery();
+export const getServerSideProps = wrapper.getServerSideProps(
+  (storeWrapper) => async () => {
+    storeWrapper.dispatch({ type: ContactActionEnum.FETCH_CONTACT_REQUEST });
 
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
+    // Stop the saga
+    storeWrapper.dispatch(END);
+    if (storeWrapper.sagaTask) {
+      await storeWrapper.sagaTask.toPromise();
+    }
+
+    return {
+      props: {},
+    };
+  }
+);
 
 export default ContactsPage;
