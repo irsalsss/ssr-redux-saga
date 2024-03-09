@@ -1,0 +1,40 @@
+.contact-card-container {
+  display: flex;
+  border-radius: 8px;
+  border: 1px solid #222;
+  padding: 16px;
+  position: relative;
+  align-items: flex-start;
+  width: 400px;
+}
+
+.contact-container {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.contact-other-information-container {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+
+.contact-other-information {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+
+  span {
+    font-size: 14px;
+  }
+}
+
+.contact-action-container {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}

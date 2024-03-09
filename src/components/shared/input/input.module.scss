@@ -1,0 +1,38 @@
+.input {
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.input-padding {
+  padding: 12px 16px;
+}
+
+.input-padding-with-icon {
+  padding: 12px 16px 12px 32px;
+}
+
+.input-icon {
+  position: absolute;
+  top: 12px;
+  left: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.bg-error {
+  border: 1px solid red !important;
+  outline: none;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+}

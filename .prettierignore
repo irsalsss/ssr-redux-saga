@@ -1,0 +1,7 @@
+# Add files here to ignore them from prettier formatting
+
+/tmp
+/dist
+node_modules
+CHANGELOG.md
+_generated
