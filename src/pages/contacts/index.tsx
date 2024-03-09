@@ -1,29 +1,29 @@
 import ContactContainer from "@/components/contact/contact-container/contact-container";
-import ContactActionEnum from "@/enum/contact/contact-action.enum";
-import { useAppSelector, wrapper } from "@/store/store";
+import { getActionDispatcher } from "@/reducers/contact.reducer";
+import { wrapper } from "@/store/store";
 import { END } from "redux-saga";
 
 const ContactsPage = () => {
-  const contact = useAppSelector((state) => state.contact.contact);
-  console.log("contact", contact);
-
   return <ContactContainer />;
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  (storeWrapper) => async () => {
-    storeWrapper.dispatch({ type: ContactActionEnum.FETCH_CONTACT_REQUEST });
+  (storeWrapper) =>
+    async ({ query }) => {
+      const search = (query["search"] ?? "") as string;
 
-    // Stop the saga
-    storeWrapper.dispatch(END);
-    if (storeWrapper.sagaTask) {
-      await storeWrapper.sagaTask.toPromise();
+      storeWrapper.dispatch(getActionDispatcher(search));
+
+      // Stop the saga
+      storeWrapper.dispatch(END);
+      if (storeWrapper.sagaTask) {
+        await storeWrapper.sagaTask.toPromise();
+      }
+
+      return {
+        props: {},
+      };
     }
-
-    return {
-      props: {},
-    };
-  }
 );
 
 export default ContactsPage;

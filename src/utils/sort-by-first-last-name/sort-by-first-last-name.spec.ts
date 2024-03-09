@@ -4,13 +4,13 @@ import {
   descendingSortByFirstLastName,
 } from "./sort-by-first-last-name";
 import mapToCamelCase from "../map-to-camel-case/map-to-camel-case";
-import ContactInterface from "@/interfaces/contact/contact.interface";
+import { ContactsInterface } from "@/interfaces/contact/contact.interface";
 
 describe("sortByFirstLastName", () => {
   it("should sort by ascending", () => {
-    const result = mapToCamelCase<Array<ContactInterface>>(
-      MOCK_LIST_CONTACT
-    ).sort(ascendingSortByFirstLastName);
+    const result = mapToCamelCase<ContactsInterface>(MOCK_LIST_CONTACT).sort(
+      ascendingSortByFirstLastName
+    );
 
     expect(result).toStrictEqual([
       {
@@ -52,9 +52,9 @@ describe("sortByFirstLastName", () => {
   });
 
   it("should sort by descending", () => {
-    const result = mapToCamelCase<Array<ContactInterface>>(
-      MOCK_LIST_CONTACT
-    ).sort(descendingSortByFirstLastName);
+    const result = mapToCamelCase<ContactsInterface>(MOCK_LIST_CONTACT).sort(
+      descendingSortByFirstLastName
+    );
 
     expect(result).toStrictEqual([
       {

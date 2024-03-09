@@ -2,6 +2,7 @@ import { ContactsInterface } from "@/interfaces/contact/contact.interface";
 import { AnyAction } from "redux-saga";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
+import ContactActionEnum from "@/enum/contact/contact-action.enum";
 
 export interface ContactState {
   contact: {
@@ -18,6 +19,11 @@ const contactInitialState: ContactState = {
     errors: "",
   },
 };
+
+export const getActionDispatcher = (search: string) => ({
+  type: ContactActionEnum.FETCH_CONTACT_REQUEST,
+  payload: { search },
+});
 
 export const contactSlice = createSlice({
   name: "contact",
@@ -40,6 +46,7 @@ export const contactSlice = createSlice({
     ) => {
       state.contact.isLoading = false;
       state.contact.data = contact;
+      state.contact.errors = "";
     },
     getContactErrorAction: (
       state: ContactState,

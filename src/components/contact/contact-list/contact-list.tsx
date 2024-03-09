@@ -14,13 +14,15 @@ import {
   ascendingSortByFirstLastName,
   descendingSortByFirstLastName,
 } from "@/utils/sort-by-first-last-name/sort-by-first-last-name";
-import { useGetContactsQuery } from "@/api/contact/@query/use-get-contacts/use-get-contacts";
 import ContactModalAddEdit from "../contact-modal-add-edit/contact-modal-add-edit";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { getActionDispatcher } from "@/reducers/contact.reducer";
 
 const ContactList = () => {
-  const contact = useAppSelector((state) => state.contact.contact);
-  console.log("contact-list", contact);
+  const dispatch = useAppDispatch();
+  const { data: contacts, isLoading } = useAppSelector(
+    (state) => state.contact.contact
+  );
 
   const [
     isAscending,
@@ -49,15 +51,6 @@ const ContactList = () => {
       state.setFavoriteContacts,
     ])
   );
-
-  const {
-    data: contacts = [],
-    refetch,
-    isLoading,
-  } = useGetContactsQuery({
-    select: (data) =>
-      data.filter((contact) => filterByContactInfo(contact, search)),
-  });
 
   const { mutate: deleteContact, isPending: isPendingDelete } =
     useDeleteContact(activeModalContact.id);
@@ -94,7 +87,8 @@ const ContactList = () => {
         notify(
           `${activeModalContact.firstName} ${activeModalContact.lastName} has been deleted`
         );
-        refetch();
+
+        dispatch(getActionDispatcher(search));
       },
       onError: (response) => {
         if (response.statusCode === ERROR_NOT_FOUND) {
@@ -132,7 +126,7 @@ const ContactList = () => {
   const currentContacts = useMemo(() => {
     const list =
       activeTab === ContactTabEnum.ALL
-        ? contacts
+        ? [...contacts]
         : Object.values(favoriteContacts);
 
     let sortedList = list;

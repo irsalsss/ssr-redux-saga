@@ -14,6 +14,10 @@ import Loader from "@/components/shared/loader/loader";
 import useEditContact from "@/api/contact/@mutation/use-edit-contact/use-edit-contact";
 import { ERROR_NOT_FOUND } from "@/constants/error";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAppDispatch } from "@/store/store";
+import useContactStore from "@/stores/contact/use-contact-store";
+import { useShallow } from "zustand/react/shallow";
+import { getActionDispatcher } from "@/reducers/contact.reducer";
 
 interface ContactModalAddEditProps {
   activeId: number;
@@ -28,6 +32,7 @@ const ContactModalAddEdit = ({
 }: ContactModalAddEditProps) => {
   const isAddMode = activeId === 0;
 
+  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
   const { data: detailContact, isLoading } = useGetDetailContactsQuery(
@@ -40,6 +45,8 @@ const ContactModalAddEdit = ({
 
   const { mutate: editContact, isPending: isLoadingEditContact } =
     useEditContact(activeId);
+
+  const [search] = useContactStore(useShallow((state) => [state.search]));
 
   const {
     control,
@@ -62,7 +69,7 @@ const ContactModalAddEdit = ({
     if (isAddMode) {
       createContact(payload, {
         onSuccess: () => {
-          queryClient.resetQueries({ queryKey: ["useGetContactsQuery"] });
+          dispatch(getActionDispatcher(search));
 
           notify("Successfully created");
           onClose();
@@ -79,7 +86,8 @@ const ContactModalAddEdit = ({
       { ...payload, id: activeId },
       {
         onSuccess: () => {
-          queryClient.resetQueries({ queryKey: ["useGetContactsQuery"] });
+          dispatch(getActionDispatcher(search));
+
           queryClient.resetQueries({
             queryKey: ["useGetDetailContactsQuery", activeId],
             exact: true,

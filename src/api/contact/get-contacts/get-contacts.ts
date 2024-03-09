@@ -1,4 +1,4 @@
-import ContactInterface from "@/interfaces/contact/contact.interface";
+import { ContactsInterface } from "@/interfaces/contact/contact.interface";
 import ResponseInterface from "@/interfaces/shared/response.interface";
 import fetchJson from "@/utils/fetch-json/fetch-json";
 import mapToCamelCase from "@/utils/map-to-camel-case/map-to-camel-case";
@@ -11,7 +11,7 @@ interface GetContactsData {
   description: string;
 }
 
-export type GetContactsOutput = Array<ContactInterface>;
+export type GetContactsOutput = ContactsInterface;
 
 interface GetContactsResponse extends ResponseInterface {
   data: Array<GetContactsData>;
