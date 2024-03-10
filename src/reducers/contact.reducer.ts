@@ -5,18 +5,22 @@ import { HYDRATE } from "next-redux-wrapper";
 import ContactActionEnum from "@/enum/contact/contact-action.enum";
 
 export interface ContactState {
-  contact: {
-    data: ContactsInterface;
-    isLoading: boolean;
-    errors: string;
-  };
+  data: ContactsInterface;
+  isLoading?: boolean;
+  errors?: string;
+  search: string;
 }
 
-const contactInitialState: ContactState = {
+export interface ContactStateReducer {
+  contact: ContactState;
+}
+
+const contactInitialState: ContactStateReducer = {
   contact: {
     data: [],
     isLoading: false,
     errors: "",
+    search: "",
   },
 };
 
@@ -36,20 +40,27 @@ export const contactSlice = createSlice({
       // immutable state based off those changes
       state.contact = contactInitialState.contact;
     },
-    getContactAction: (state: ContactState) => {
+    setSearchContact: (
+      state: ContactStateReducer,
+      { payload: search }: PayloadAction<string>
+    ) => {
+      state.contact.search = search;
+    },
+    getContactAction: (state: ContactStateReducer) => {
       state.contact.isLoading = true;
       state.contact.errors = "";
     },
     getContactSuccessAction: (
-      state: ContactState,
-      { payload: contact }: PayloadAction<ContactsInterface>
+      state: ContactStateReducer,
+      { payload: contact }: PayloadAction<ContactState>
     ) => {
       state.contact.isLoading = false;
-      state.contact.data = contact;
+      state.contact.data = contact.data;
       state.contact.errors = "";
+      state.contact.search = contact.search;
     },
     getContactErrorAction: (
-      state: ContactState,
+      state: ContactStateReducer,
       { payload: error }: PayloadAction<string>
     ) => {
       state.contact.isLoading = false;

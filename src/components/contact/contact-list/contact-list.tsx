@@ -20,14 +20,16 @@ import { getActionDispatcher } from "@/reducers/contact.reducer";
 
 const ContactList = () => {
   const dispatch = useAppDispatch();
-  const { data: contacts, isLoading } = useAppSelector(
-    (state) => state.contact.contact
-  );
+
+  const {
+    data: contacts,
+    isLoading,
+    search,
+  } = useAppSelector((state) => state.contact.contact);
 
   const [
     isAscending,
 
-    search,
     activeTab,
 
     activeModalContact,
@@ -40,7 +42,6 @@ const ContactList = () => {
     useShallow((state) => [
       state.isAscending,
 
-      state.search,
       state.activeTab,
 
       state.activeModalContact,

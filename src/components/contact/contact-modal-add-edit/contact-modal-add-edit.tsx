@@ -14,9 +14,7 @@ import Loader from "@/components/shared/loader/loader";
 import useEditContact from "@/api/contact/@mutation/use-edit-contact/use-edit-contact";
 import { ERROR_NOT_FOUND } from "@/constants/error";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAppDispatch } from "@/store/store";
-import useContactStore from "@/stores/contact/use-contact-store";
-import { useShallow } from "zustand/react/shallow";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getActionDispatcher } from "@/reducers/contact.reducer";
 
 interface ContactModalAddEditProps {
@@ -35,6 +33,8 @@ const ContactModalAddEdit = ({
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
+  const search = useAppSelector((state) => state.contact.contact.search);
+
   const { data: detailContact, isLoading } = useGetDetailContactsQuery(
     activeId,
     activeId > 0
@@ -45,8 +45,6 @@ const ContactModalAddEdit = ({
 
   const { mutate: editContact, isPending: isLoadingEditContact } =
     useEditContact(activeId);
-
-  const [search] = useContactStore(useShallow((state) => [state.search]));
 
   const {
     control,

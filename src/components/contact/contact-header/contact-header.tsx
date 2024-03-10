@@ -1,6 +1,8 @@
 import Button from "@/components/shared/button/button";
 import Input from "@/components/shared/input/input";
 import ModalTypeEnum from "@/enum/shared/modal-type.enum";
+import { contactActions } from "@/reducers/contact.reducer";
+import { useAppDispatch } from "@/store/store";
 import useContactStore, {
   defaultContact,
 } from "@/stores/contact/use-contact-store";
@@ -13,6 +15,8 @@ import { Suspense, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 const Header = () => {
+  const dispatch = useAppDispatch();
+
   const pathname = usePathname();
   const { push } = useRouter();
 
@@ -24,8 +28,8 @@ const Header = () => {
   const [value, setValue] = useState(qSearch);
   const debouncedValue = useDebounce<string>(value, 500);
 
-  const [setSearch, setActiveModalContact] = useContactStore(
-    useShallow((state) => [state.setSearch, state.setActiveModalContact])
+  const [setActiveModalContact] = useContactStore(
+    useShallow((state) => [state.setActiveModalContact])
   );
 
   const handleSearch = (keyword: string) => {
@@ -46,7 +50,8 @@ const Header = () => {
           "?" +
           createQueryString(query.toString(), "search", debouncedValue)
       );
-      setSearch(debouncedValue);
+
+      dispatch(contactActions.setSearchContact(debouncedValue));
     }
   }, [debouncedValue]);
 

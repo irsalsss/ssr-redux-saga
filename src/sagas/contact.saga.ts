@@ -23,7 +23,9 @@ function* fetchContactSaga(action: AnyAction) {
     );
 
     // Dispatch a success action with the received data
-    yield put(contactActions.getContactSuccessAction(filteredData));
+    yield put(
+      contactActions.getContactSuccessAction({ data: filteredData, search })
+    );
   } catch (error) {
     // Dispatch a failure action if an error occurs
     yield put(contactActions.getContactErrorAction((error as Error).message));

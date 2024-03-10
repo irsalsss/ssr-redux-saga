@@ -1,8 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import { ContactState, contactReducer } from "./contact.reducer";
+import { ContactStateReducer, contactReducer } from "./contact.reducer";
 
 export interface RootState {
-  contact: ContactState;
+  contact: ContactStateReducer;
 }
 
 const rootReducer = combineReducers({

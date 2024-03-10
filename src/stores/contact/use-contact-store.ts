@@ -15,14 +15,7 @@ interface ActiveModalContactInterface extends ContactInterface {
   type: ModalTypeEnum;
 }
 
-const getUrlSearch = () => {
-  return typeof window !== "undefined" ? window.location.search.slice(1) : "";
-};
-
 interface UseContactStoreState {
-  search: string;
-  setSearch: (value: string) => void;
-
   activeTab: ContactTabEnum;
   setActiveTab: (tab: ContactTabEnum) => void;
 
@@ -38,9 +31,6 @@ interface UseContactStoreState {
 }
 
 const useContactStore = create<UseContactStoreState>()((set) => ({
-  search: new URLSearchParams(getUrlSearch()).get("search") || "",
-  setSearch: (value) => set({ search: value }),
-
   activeTab: ContactTabEnum.ALL,
   setActiveTab: (tab: ContactTabEnum) => set({ activeTab: tab }),
 
