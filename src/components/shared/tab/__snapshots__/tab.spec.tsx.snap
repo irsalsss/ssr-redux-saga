@@ -4,7 +4,7 @@ exports[`Tab should render tab successfully 1`] = `
 <body>
   <div>
     <div
-      class="flex items-center gap-3 w-full"
+      class="flex items-center gap-3 w-full justify-center"
     >
       <div
         class="tab tab-active"

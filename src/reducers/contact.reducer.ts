@@ -24,7 +24,7 @@ const contactInitialState: ContactStateReducer = {
   },
 };
 
-export const getActionDispatcher = (search: string) => ({
+export const getContactActionDispatcher = (search: string) => ({
   type: ContactActionEnum.FETCH_CONTACT_REQUEST,
   payload: { search },
 });

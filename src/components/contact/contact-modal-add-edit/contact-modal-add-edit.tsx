@@ -1,21 +1,19 @@
 import useCreateContact from "@/api/contact/@mutation/use-create-contact/use-create-contact";
-import { useGetDetailContactsQuery } from "@/api/contact/@query/use-get-detail-contact/use-get-detail-contact";
-import Input from "@/components/shared/input/input";
 import Modal from "@/components/shared/modal/modal";
 import { notify } from "@/components/shared/toaster/toaster";
 import ContactInterface, {
   ContactFormField,
 } from "@/interfaces/contact/contact.interface";
-import { contactValidation } from "@/validations/contact/contact.validation";
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { isEmpty } from "lodash-es";
 import Loader from "@/components/shared/loader/loader";
 import useEditContact from "@/api/contact/@mutation/use-edit-contact/use-edit-contact";
 import { ERROR_NOT_FOUND } from "@/constants/error";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getActionDispatcher } from "@/reducers/contact.reducer";
+import { getContactActionDispatcher } from "@/reducers/contact.reducer";
+import { getContactDetailActionDispatcher } from "@/reducers/contact-detail.reducer";
+import ContactForm from "../contact-form/contact-form";
+import { FormProvider, useForm } from "react-hook-form";
 
 interface ContactModalAddEditProps {
   activeId: number;
@@ -35,26 +33,24 @@ const ContactModalAddEdit = ({
 
   const search = useAppSelector((state) => state.contact.contact.search);
 
-  const { data: detailContact, isLoading } = useGetDetailContactsQuery(
-    activeId,
-    activeId > 0
+  const { data: contactDetail, isLoading } = useAppSelector(
+    (state) => state.contactDetail.contactDetail
   );
+
+  const methods = useForm<ContactFormField>({
+    mode: "onChange",
+    values: contactDetail,
+  });
+
+  const {
+    formState: { isDirty, isValid },
+  } = methods;
 
   const { mutate: createContact, isPending: isLoadingCreateContact } =
     useCreateContact();
 
   const { mutate: editContact, isPending: isLoadingEditContact } =
     useEditContact(activeId);
-
-  const {
-    control,
-    handleSubmit,
-    formState: { isDirty, isValid },
-    trigger,
-  } = useForm<ContactFormField>({
-    mode: "onChange",
-    defaultValues: detailContact,
-  });
 
   const onSubmit = (data: ContactFormField) => {
     const payload = {
@@ -67,7 +63,7 @@ const ContactModalAddEdit = ({
     if (isAddMode) {
       createContact(payload, {
         onSuccess: () => {
-          dispatch(getActionDispatcher(search));
+          dispatch(getContactActionDispatcher(search));
 
           notify("Successfully created");
           onClose();
@@ -84,7 +80,7 @@ const ContactModalAddEdit = ({
       { ...payload, id: activeId },
       {
         onSuccess: () => {
-          dispatch(getActionDispatcher(search));
+          dispatch(getContactActionDispatcher(search));
 
           queryClient.resetQueries({
             queryKey: ["useGetDetailContactsQuery", activeId],
@@ -117,101 +113,13 @@ const ContactModalAddEdit = ({
   };
 
   useEffect(() => {
-    if (!isAddMode && !isEmpty(detailContact)) {
-      trigger();
-    }
-  }, [detailContact]);
+    dispatch(getContactDetailActionDispatcher(activeId));
+  }, []);
 
   const content = (
-    <div className='flex flex-col gap-4 p-4'>
-      <div className='flex flex-col gap-1'>
-        <label htmlFor='firstName'>First name:</label>
-
-        <Controller
-          name='firstName'
-          control={control}
-          defaultValue={detailContact?.firstName || ""}
-          rules={{
-            required: "This field is required",
-            validate: contactValidation.firstName,
-          }}
-          render={({ field: { value, onChange }, fieldState: { error } }) => (
-            <Input
-              id='firstName'
-              value={value}
-              onChange={onChange}
-              error={error?.message}
-            />
-          )}
-        />
-      </div>
-
-      <div className='flex flex-col gap-1'>
-        <label htmlFor='lastName'>Last name:</label>
-
-        <Controller
-          name='lastName'
-          control={control}
-          defaultValue={detailContact?.lastName || ""}
-          rules={{
-            required: "This field is required",
-            validate: contactValidation.lastName,
-          }}
-          render={({ field: { value, onChange }, fieldState: { error } }) => (
-            <Input
-              id='lastName'
-              value={value}
-              onChange={onChange}
-              error={error?.message}
-            />
-          )}
-        />
-      </div>
-
-      <div className='flex flex-col gap-1'>
-        <label htmlFor='lastName'>Job:</label>
-
-        <Controller
-          name='job'
-          control={control}
-          defaultValue={detailContact?.job || ""}
-          rules={{
-            required: "This field is required",
-            validate: contactValidation.job,
-          }}
-          render={({ field: { value, onChange }, fieldState: { error } }) => (
-            <Input
-              id='job'
-              value={value}
-              onChange={onChange}
-              error={error?.message}
-            />
-          )}
-        />
-      </div>
-
-      <div className='flex flex-col gap-1'>
-        <label htmlFor='lastName'>Description:</label>
-
-        <Controller
-          name='description'
-          control={control}
-          defaultValue={detailContact?.description || ""}
-          rules={{
-            required: "This field is required",
-            validate: contactValidation.description,
-          }}
-          render={({ field: { value, onChange }, fieldState: { error } }) => (
-            <Input
-              id='description'
-              value={value}
-              onChange={onChange}
-              error={error?.message}
-            />
-          )}
-        />
-      </div>
-    </div>
+    <FormProvider {...methods}>
+      <ContactForm contactDetail={contactDetail} />
+    </FormProvider>
   );
 
   const loaderContent = (
@@ -225,7 +133,7 @@ const ContactModalAddEdit = ({
       title={isAddMode ? "Add Contact" : "Edit Contact"}
       content={!isAddMode && isLoading ? loaderContent : content}
       onClose={onClose}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={methods.handleSubmit(onSubmit)}
       isDisableSubmit={
         !isDirty || !isValid || isLoadingCreateContact || isLoadingEditContact
       }

@@ -1,5 +1,5 @@
 import ContactContainer from "@/components/contact/contact-container/contact-container";
-import { getActionDispatcher } from "@/reducers/contact.reducer";
+import { getContactActionDispatcher } from "@/reducers/contact.reducer";
 import { wrapper } from "@/store/store";
 import { END } from "redux-saga";
 
@@ -12,7 +12,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     async ({ query }) => {
       const search = (query["search"] ?? "") as string;
 
-      storeWrapper.dispatch(getActionDispatcher(search));
+      storeWrapper.dispatch(getContactActionDispatcher(search));
 
       // Stop the saga
       storeWrapper.dispatch(END);

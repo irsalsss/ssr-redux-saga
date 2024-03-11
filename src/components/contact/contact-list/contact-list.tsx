@@ -16,7 +16,8 @@ import {
 } from "@/utils/sort-by-first-last-name/sort-by-first-last-name";
 import ContactModalAddEdit from "../contact-modal-add-edit/contact-modal-add-edit";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getActionDispatcher } from "@/reducers/contact.reducer";
+import { getContactActionDispatcher } from "@/reducers/contact.reducer";
+import { contactDetailActions } from "@/reducers/contact-detail.reducer";
 
 const ContactList = () => {
   const dispatch = useAppDispatch();
@@ -26,6 +27,10 @@ const ContactList = () => {
     isLoading,
     search,
   } = useAppSelector((state) => state.contact.contact);
+
+  const { activeModalData } = useAppSelector(
+    (state) => state.contactDetail.contactDetail
+  );
 
   const [
     isAscending,
@@ -75,10 +80,12 @@ const ContactList = () => {
   };
 
   const handleOpenModalEdit = (contact: ContactInterface) => {
-    setActiveModalContact({
-      ...contact,
-      type: ModalTypeEnum.EDIT,
-    });
+    dispatch(
+      contactDetailActions.openModalAddEdit({
+        type: ModalTypeEnum.EDIT,
+        id: contact.id,
+      })
+    );
   };
 
   const handleDeleteContact = () => {
@@ -89,7 +96,7 @@ const ContactList = () => {
           `${activeModalContact.firstName} ${activeModalContact.lastName} has been deleted`
         );
 
-        dispatch(getActionDispatcher(search));
+        dispatch(getContactActionDispatcher(search));
       },
       onError: (response) => {
         if (response.statusCode === ERROR_NOT_FOUND) {
@@ -167,7 +174,7 @@ const ContactList = () => {
         </div>
       ) : null}
 
-      <div className='flex flex-wrap gap-4 px-4 mt-4'>
+      <div className='flex flex-wrap gap-4 px-4 mt-4 justify-center'>
         {currentContacts.map((contact) => (
           <ContactCard
             key={contact.id}
@@ -194,11 +201,14 @@ const ContactList = () => {
       ) : null}
 
       {[ModalTypeEnum.ADD, ModalTypeEnum.EDIT].includes(
-        activeModalContact.type
+        activeModalData!.type
       ) ? (
         <ContactModalAddEdit
-          activeId={activeModalContact.id}
-          onClose={handleCloseActiveModalContact}
+          activeId={activeModalData!.id}
+          onClose={() => {
+            handleCloseActiveModalContact();
+            dispatch(contactDetailActions.resetContactDetail());
+          }}
           favoriteContacts={favoriteContacts}
         />
       ) : null}

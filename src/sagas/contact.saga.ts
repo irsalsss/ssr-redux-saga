@@ -12,7 +12,7 @@ import { takeEvery, call, put } from "redux-saga/effects";
 function* fetchContactSaga(action: AnyAction) {
   const search = action.payload.search;
 
-  contactActions.getContactAction();
+  yield put(contactActions.getContactAction());
 
   try {
     // Call the asynchronous function using 'call' effect
