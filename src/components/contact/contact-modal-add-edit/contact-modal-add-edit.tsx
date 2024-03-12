@@ -11,31 +11,36 @@ import { ERROR_NOT_FOUND } from "@/constants/error";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getContactActionDispatcher } from "@/reducers/contact.reducer";
-import { getContactDetailActionDispatcher } from "@/reducers/contact-detail.reducer";
+import {
+  contactDetailActions,
+  getContactDetailActionDispatcher,
+} from "@/reducers/contact-detail.reducer";
 import ContactForm from "../contact-form/contact-form";
 import { FormProvider, useForm } from "react-hook-form";
+import ModalTypeEnum from "@/enum/shared/modal-type.enum";
 
 interface ContactModalAddEditProps {
-  activeId: number;
-  onClose: () => void;
   favoriteContacts: Record<number, ContactInterface>;
 }
 
 const ContactModalAddEdit = ({
-  activeId,
-  onClose,
   favoriteContacts,
 }: ContactModalAddEditProps) => {
-  const isAddMode = activeId === 0;
-
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
-  const search = useAppSelector((state) => state.contact.contact.search);
+  const search =
+    useAppSelector((state) => state.contact.contact.filter.search) || "";
 
-  const { data: contactDetail, isLoading } = useAppSelector(
-    (state) => state.contactDetail.contactDetail
-  );
+  const {
+    data: contactDetail,
+    isLoading,
+    activeModalData,
+  } = useAppSelector((state) => state.contactDetail.contactDetail);
+
+  const isAddMode = activeModalData?.type === ModalTypeEnum.ADD;
+
+  const activeId = activeModalData?.id ?? -1;
 
   const methods = useForm<ContactFormField>({
     mode: "onChange",
@@ -52,6 +57,10 @@ const ContactModalAddEdit = ({
   const { mutate: editContact, isPending: isLoadingEditContact } =
     useEditContact(activeId);
 
+  const handleClose = () => {
+    dispatch(contactDetailActions.resetContactDetail());
+  };
+
   const onSubmit = (data: ContactFormField) => {
     const payload = {
       firstName: data.firstName.trim(),
@@ -66,7 +75,7 @@ const ContactModalAddEdit = ({
           dispatch(getContactActionDispatcher(search));
 
           notify("Successfully created");
-          onClose();
+          handleClose();
         },
         onError: () => {
           notify("Something went wrong, please try again");
@@ -98,7 +107,7 @@ const ContactModalAddEdit = ({
           localStorage.setItem("favorites", JSON.stringify(favoriteContacts));
 
           notify("Successfully edited");
-          onClose();
+          handleClose();
         },
         onError: (response) => {
           if (response.statusCode === ERROR_NOT_FOUND) {
@@ -132,7 +141,7 @@ const ContactModalAddEdit = ({
     <Modal
       title={isAddMode ? "Add Contact" : "Edit Contact"}
       content={!isAddMode && isLoading ? loaderContent : content}
-      onClose={onClose}
+      onClose={handleClose}
       onSubmit={methods.handleSubmit(onSubmit)}
       isDisableSubmit={
         !isDirty || !isValid || isLoadingCreateContact || isLoadingEditContact

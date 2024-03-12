@@ -2,12 +2,9 @@ import { useCallback, useEffect, useMemo } from "react";
 import ContactCard from "../contact-card/contact-card";
 import useContactStore from "@/stores/contact/use-contact-store";
 import { useShallow } from "zustand/react/shallow";
-import useDeleteContact from "@/api/contact/@mutation/use-delete-contact/use-delete-contact";
 import { notify } from "@/components/shared/toaster/toaster";
 import ModalTypeEnum from "@/enum/shared/modal-type.enum";
 import ContactInterface from "@/interfaces/contact/contact.interface";
-import { ERROR_NOT_FOUND } from "@/constants/error";
-import Modal from "@/components/shared/modal/modal";
 import ContactTabEnum from "@/enum/contact/contact-tab.enum";
 import { filterByContactInfo } from "@/utils/filter-by-contact-info/filter-by-contact-info";
 import {
@@ -16,50 +13,36 @@ import {
 } from "@/utils/sort-by-first-last-name/sort-by-first-last-name";
 import ContactModalAddEdit from "../contact-modal-add-edit/contact-modal-add-edit";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getContactActionDispatcher } from "@/reducers/contact.reducer";
 import { contactDetailActions } from "@/reducers/contact-detail.reducer";
+import ContactModalDelete from "../contact-modal-delete/contact-modal-delete";
+import SortByEnum from "@/enum/shared/sort-by.enum";
 
 const ContactList = () => {
   const dispatch = useAppDispatch();
 
-  const {
-    data: contacts,
-    isLoading,
-    search,
-  } = useAppSelector((state) => state.contact.contact);
-
-  const { activeModalData } = useAppSelector(
-    (state) => state.contactDetail.contactDetail
+  const { data: contacts, isLoading } = useAppSelector(
+    (state) => state.contact.contact
   );
 
-  const [
-    isAscending,
+  const search =
+    useAppSelector((state) => state.contact.contact.filter.search) || "";
 
-    activeTab,
+  const sortBy = useAppSelector((state) => state.contact.contact.filter.sortBy);
 
-    activeModalContact,
-    setActiveModalContact,
-    handleCloseActiveModalContact,
+  const isAscending = sortBy === SortByEnum.ASC;
 
-    favoriteContacts,
-    setFavoriteContacts,
-  ] = useContactStore(
+  const activeModalData = useAppSelector(
+    (state) => state.contactDetail.contactDetail.activeModalData
+  );
+
+  const [activeTab, favoriteContacts, setFavoriteContacts] = useContactStore(
     useShallow((state) => [
-      state.isAscending,
-
       state.activeTab,
-
-      state.activeModalContact,
-      state.setActiveModalContact,
-      state.handleCloseActiveModalContact,
 
       state.favoriteContacts,
       state.setFavoriteContacts,
     ])
   );
-
-  const { mutate: deleteContact, isPending: isPendingDelete } =
-    useDeleteContact(activeModalContact.id);
 
   const handleOpenModalDelete = (contact: ContactInterface) => {
     const isFavorite = Object.prototype.hasOwnProperty.call(
@@ -69,44 +52,24 @@ const ContactList = () => {
 
     if (isFavorite) {
       notify(`You can't delete it. Please unfavorite first`);
-
       return;
     }
 
-    setActiveModalContact({
-      ...contact,
-      type: ModalTypeEnum.DELETE,
-    });
-  };
-
-  const handleOpenModalEdit = (contact: ContactInterface) => {
     dispatch(
-      contactDetailActions.openModalAddEdit({
-        type: ModalTypeEnum.EDIT,
+      contactDetailActions.openModalContact({
+        type: ModalTypeEnum.DELETE,
         id: contact.id,
       })
     );
   };
 
-  const handleDeleteContact = () => {
-    deleteContact(activeModalContact.id, {
-      onSuccess: () => {
-        handleCloseActiveModalContact();
-        notify(
-          `${activeModalContact.firstName} ${activeModalContact.lastName} has been deleted`
-        );
-
-        dispatch(getContactActionDispatcher(search));
-      },
-      onError: (response) => {
-        if (response.statusCode === ERROR_NOT_FOUND) {
-          notify(response.message);
-          return;
-        }
-
-        notify(`Something went wrong, please try again`);
-      },
-    });
+  const handleOpenModalEdit = (contact: ContactInterface) => {
+    dispatch(
+      contactDetailActions.openModalContact({
+        type: ModalTypeEnum.EDIT,
+        id: contact.id,
+      })
+    );
   };
 
   const handleFavoriteContact = useCallback(
@@ -190,27 +153,14 @@ const ContactList = () => {
         ))}
       </div>
 
-      {activeModalContact.type === ModalTypeEnum.DELETE ? (
-        <Modal
-          title='Delete Contact'
-          content='Are you sure want to delete this contact?'
-          onClose={handleCloseActiveModalContact}
-          onSubmit={handleDeleteContact}
-          isDisableSubmit={isPendingDelete}
-        />
+      {activeModalData!.type === ModalTypeEnum.DELETE ? (
+        <ContactModalDelete />
       ) : null}
 
       {[ModalTypeEnum.ADD, ModalTypeEnum.EDIT].includes(
         activeModalData!.type
       ) ? (
-        <ContactModalAddEdit
-          activeId={activeModalData!.id}
-          onClose={() => {
-            handleCloseActiveModalContact();
-            dispatch(contactDetailActions.resetContactDetail());
-          }}
-          favoriteContacts={favoriteContacts}
-        />
+        <ContactModalAddEdit favoriteContacts={favoriteContacts} />
       ) : null}
     </>
   );

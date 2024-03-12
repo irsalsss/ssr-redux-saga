@@ -3,13 +3,14 @@ import ModalTypeEnum from "@/enum/shared/modal-type.enum";
 import ContactSearch from "../contact-search/contact-search";
 import { contactDetailActions } from "@/reducers/contact-detail.reducer";
 import { useAppDispatch } from "@/store/store";
+import { memo } from "react";
 
 const ContactHeader = () => {
   const dispatch = useAppDispatch();
 
   const handleOpenModalAdd = () => {
     dispatch(
-      contactDetailActions.openModalAddEdit({
+      contactDetailActions.openModalContact({
         type: ModalTypeEnum.ADD,
         id: 0,
       })
@@ -27,4 +28,4 @@ const ContactHeader = () => {
   );
 };
 
-export default ContactHeader;
+export default memo(ContactHeader);

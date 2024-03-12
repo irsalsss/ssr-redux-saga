@@ -1,7 +1,6 @@
 import Input from "@/components/shared/input/input";
 import { contactActions } from "@/reducers/contact.reducer";
 import { useAppDispatch } from "@/store/store";
-import { createQueryString } from "@/utils/create-query-string/create-query-string";
 import { useDebounce } from "@/utils/use-debounce/use-debounce";
 import useHasMounted from "@/utils/use-has-mounted/use-has-mounted";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
@@ -27,9 +26,12 @@ const ContactSearch = () => {
   useEffect(() => {
     if (hasMounted) {
       push(
-        pathname +
-          "?" +
-          createQueryString(query.toString(), "search", debouncedValue)
+        {
+          pathname: pathname,
+          query: { search: debouncedValue },
+        },
+        undefined,
+        { shallow: true }
       );
 
       dispatch(contactActions.setSearchContact(debouncedValue));

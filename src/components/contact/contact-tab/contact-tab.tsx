@@ -1,8 +1,12 @@
 import ButtonIcon from "@/components/shared/button-icon/button-icon";
 import Tab from "@/components/shared/tab/tab";
 import ContactTabEnum from "@/enum/contact/contact-tab.enum";
+import SortByEnum from "@/enum/shared/sort-by.enum";
+import { contactActions } from "@/reducers/contact.reducer";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import useContactStore from "@/stores/contact/use-contact-store";
 import { TextAlignBottomIcon, TextAlignTopIcon } from "@radix-ui/react-icons";
+import { memo, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 const tabOptions = [
@@ -17,24 +21,25 @@ const tabOptions = [
 ];
 
 const ContactTab = () => {
-  const [activeTab, setActiveTab, isAscending, setIsAscending] =
-    useContactStore(
-      useShallow((state) => [
-        state.activeTab,
-        state.setActiveTab,
+  const dispatch = useAppDispatch();
 
-        state.isAscending,
-        state.setIsAscending,
-      ])
-    );
+  const sortBy = useAppSelector((state) => state.contact.contact.filter.sortBy);
+
+  const [activeTab, setActiveTab] = useContactStore(
+    useShallow((state) => [state.activeTab, state.setActiveTab])
+  );
 
   const handleSort = () => {
-    setIsAscending(!isAscending);
+    dispatch(contactActions.setSortBy());
   };
 
   const handleClickTab = (value: string) => {
     setActiveTab(value as ContactTabEnum);
   };
+
+  const isAscending = useMemo(() => {
+    return sortBy === SortByEnum.ASC;
+  }, [sortBy]);
 
   return (
     <div className='flex items-center justify-between px-4 mt-4'>
@@ -54,4 +59,4 @@ const ContactTab = () => {
   );
 };
 
-export default ContactTab;
+export default memo(ContactTab);

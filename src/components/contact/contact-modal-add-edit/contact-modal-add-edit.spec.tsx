@@ -6,11 +6,7 @@ import { wrapperReactQuery } from "@/utils/test/wrapper-testing";
 describe("ContactModalAddEdit", () => {
   it("should render ContactModalAddEdit successfully", () => {
     const { baseElement } = render(
-      <ContactModalAddEdit
-        activeId={0}
-        onClose={jest.fn()}
-        favoriteContacts={MOCK_FAVORITE_CONTACT}
-      />,
+      <ContactModalAddEdit favoriteContacts={MOCK_FAVORITE_CONTACT} />,
       { wrapper: wrapperReactQuery }
     );
 

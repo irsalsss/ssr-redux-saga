@@ -30,7 +30,7 @@ const contactDetailInitialState: ContactDetailStateReducer = {
       job: "",
       description: "",
     },
-    isLoading: false,
+    isLoading: true,
     errors: "",
     activeModalData: {
       type: ModalTypeEnum.EMPTY,
@@ -74,7 +74,7 @@ export const contactDetailSlice = createSlice({
       state.contactDetail.isLoading = false;
       state.contactDetail.errors = error;
     },
-    openModalAddEdit: (
+    openModalContact: (
       state,
       { payload: modalData }: PayloadAction<ModalInterface>
     ) => {

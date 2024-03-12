@@ -3,12 +3,14 @@ import { AnyAction } from "redux-saga";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import ContactActionEnum from "@/enum/contact/contact-action.enum";
+import FilterInterface from "@/interfaces/shared/filter.interface";
+import SortByEnum from "@/enum/shared/sort-by.enum";
 
 export interface ContactState {
   data: ContactsInterface;
   isLoading?: boolean;
   errors?: string;
-  search: string;
+  filter: FilterInterface;
 }
 
 export interface ContactStateReducer {
@@ -18,9 +20,12 @@ export interface ContactStateReducer {
 const contactInitialState: ContactStateReducer = {
   contact: {
     data: [],
-    isLoading: false,
+    isLoading: true,
     errors: "",
-    search: "",
+    filter: {
+      search: "",
+      sortBy: SortByEnum.ASC,
+    },
   },
 };
 
@@ -44,7 +49,13 @@ export const contactSlice = createSlice({
       state: ContactStateReducer,
       { payload: search }: PayloadAction<string>
     ) => {
-      state.contact.search = search;
+      state.contact.filter.search = search;
+    },
+    setSortBy: (state: ContactStateReducer) => {
+      state.contact.filter.sortBy =
+        state.contact.filter.sortBy === SortByEnum.ASC
+          ? SortByEnum.DESC
+          : SortByEnum.ASC;
     },
     getContactAction: (state: ContactStateReducer) => {
       state.contact.isLoading = true;
@@ -57,7 +68,7 @@ export const contactSlice = createSlice({
       state.contact.isLoading = false;
       state.contact.data = contact.data;
       state.contact.errors = "";
-      state.contact.search = contact.search;
+      state.contact.filter.search = contact.filter.search;
     },
     getContactErrorAction: (
       state: ContactStateReducer,
