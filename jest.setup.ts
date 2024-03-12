@@ -20,6 +20,19 @@ jest.mock("next/navigation", () => {
   };
 });
 
+jest.mock("next/router", () => {
+  return {
+    __esModule: true,
+    useRouter: () => ({
+      push: jest.fn(),
+      pathname: "",
+      query: "",
+      replace: jest.fn(),
+      prefetch: jest.fn(),
+    }),
+  };
+});
+
 beforeAll(() => {
   server.listen();
 });

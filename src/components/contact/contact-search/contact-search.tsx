@@ -5,19 +5,17 @@ import { createQueryString } from "@/utils/create-query-string/create-query-stri
 import { useDebounce } from "@/utils/use-debounce/use-debounce";
 import useHasMounted from "@/utils/use-has-mounted/use-has-mounted";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 const ContactSearch = () => {
   const dispatch = useAppDispatch();
 
-  const pathname = usePathname();
-  const { push } = useRouter();
+  const { push, pathname, query } = useRouter();
 
-  const query = useSearchParams();
   const hasMounted = useHasMounted();
 
-  const qSearch = query.get("search") ?? "";
+  const qSearch = (query["search"] ?? "") as string;
 
   const [value, setValue] = useState(qSearch);
   const debouncedValue = useDebounce<string>(value, 500);
