@@ -21,7 +21,7 @@ export interface ContactDetailStateReducer {
   contactDetail: ContactDetailState;
 }
 
-const contactDetailInitialState: ContactDetailStateReducer = {
+export const contactDetailInitialState: ContactDetailStateReducer = {
   contactDetail: {
     data: {
       id: 0,

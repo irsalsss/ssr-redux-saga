@@ -1,4 +1,4 @@
-import { MOCK_LIST_CONTACT } from "@/mocks/contact/contact-mock";
+import { MOCK_CONTACT_LIST } from "@/mocks/contact/contact-mock";
 import {
   ascendingSortByFirstLastName,
   descendingSortByFirstLastName,
@@ -8,7 +8,7 @@ import { ContactsInterface } from "@/interfaces/contact/contact.interface";
 
 describe("sortByFirstLastName", () => {
   it("should sort by ascending", () => {
-    const result = mapToCamelCase<ContactsInterface>(MOCK_LIST_CONTACT).sort(
+    const result = mapToCamelCase<ContactsInterface>(MOCK_CONTACT_LIST).sort(
       ascendingSortByFirstLastName
     );
 
@@ -52,7 +52,7 @@ describe("sortByFirstLastName", () => {
   });
 
   it("should sort by descending", () => {
-    const result = mapToCamelCase<ContactsInterface>(MOCK_LIST_CONTACT).sort(
+    const result = mapToCamelCase<ContactsInterface>(MOCK_CONTACT_LIST).sort(
       descendingSortByFirstLastName
     );
 

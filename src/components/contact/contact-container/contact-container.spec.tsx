@@ -4,23 +4,47 @@ import {
   userEvent,
   waitFor,
 } from "@/utils/test/react-testing-setup";
-import { wrapperReactQuery } from "@/utils/test/wrapper-testing";
+import { WrapperRedux, wrapperReactQuery } from "@/utils/test/wrapper-testing";
 import ContactContainer from "./contact-container";
+import {
+  MOCK_CONTACT_DETAIL_REDUCER,
+  MOCK_CONTACT_REDUCER,
+} from "@/mocks/contact/contact-mock";
 
 describe("ContactContainer", () => {
   it("should render ContactContainer successfully", () => {
-    const { baseElement } = render(<ContactContainer />, {
-      wrapper: wrapperReactQuery,
-    });
+    const { baseElement } = render(
+      <WrapperRedux
+        initialState={{
+          contact: MOCK_CONTACT_REDUCER,
+          contactDetail: MOCK_CONTACT_DETAIL_REDUCER,
+        }}
+      >
+        <ContactContainer />
+      </WrapperRedux>,
+      {
+        wrapper: wrapperReactQuery,
+      }
+    );
 
     expect(baseElement).toMatchSnapshot();
     expect(baseElement).toBeTruthy();
   });
 
   it("should delete contact", async () => {
-    render(<ContactContainer />, {
-      wrapper: wrapperReactQuery,
-    });
+    render(
+      <WrapperRedux
+        initialState={{
+          contact: MOCK_CONTACT_REDUCER,
+          contactDetail: MOCK_CONTACT_DETAIL_REDUCER,
+        }}
+      >
+        <ContactContainer />
+      </WrapperRedux>,
+      {
+        wrapper: wrapperReactQuery,
+      }
+    );
 
     await waitFor(() => {
       const deleteIcon = screen.getAllByRole("button", {
@@ -46,9 +70,19 @@ describe("ContactContainer", () => {
   });
 
   it("should favorite contact", async () => {
-    render(<ContactContainer />, {
-      wrapper: wrapperReactQuery,
-    });
+    render(
+      <WrapperRedux
+        initialState={{
+          contact: MOCK_CONTACT_REDUCER,
+          contactDetail: MOCK_CONTACT_DETAIL_REDUCER,
+        }}
+      >
+        <ContactContainer />
+      </WrapperRedux>,
+      {
+        wrapper: wrapperReactQuery,
+      }
+    );
 
     await waitFor(() => {
       const favoriteIcon = screen.getAllByRole("button", {
@@ -68,9 +102,19 @@ describe("ContactContainer", () => {
   });
 
   it("should sort by descending", async () => {
-    render(<ContactContainer />, {
-      wrapper: wrapperReactQuery,
-    });
+    render(
+      <WrapperRedux
+        initialState={{
+          contact: MOCK_CONTACT_REDUCER,
+          contactDetail: MOCK_CONTACT_DETAIL_REDUCER,
+        }}
+      >
+        <ContactContainer />
+      </WrapperRedux>,
+      {
+        wrapper: wrapperReactQuery,
+      }
+    );
 
     await waitFor(() => {
       const ascendingIcon = screen.getByRole("button", {

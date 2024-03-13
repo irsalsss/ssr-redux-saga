@@ -1,4 +1,11 @@
-export const MOCK_LIST_CONTACT = [
+import ModalTypeEnum from "@/enum/shared/modal-type.enum";
+import SortByEnum from "@/enum/shared/sort-by.enum";
+import ContactInterface, {
+  ContactsInterface,
+} from "@/interfaces/contact/contact.interface";
+import mapToCamelCase from "@/utils/map-to-camel-case/map-to-camel-case";
+
+export const MOCK_CONTACT_LIST = [
   {
     id: 1,
     first_name: "Luke",
@@ -36,12 +43,72 @@ export const MOCK_LIST_CONTACT = [
   },
 ];
 
-export const MOCK_FAVORITE_CONTACT = {
+export const MOCK_CONTACT_FAVORITE = {
   1: {
     id: 1,
     firstName: "Luke",
     lastName: "Skywalker",
     job: "Jedi knight",
     description: "Son of Anakin Skywalker",
+  },
+};
+
+export const MOCK_CONTACT_REDUCER = {
+  contact: {
+    data: mapToCamelCase<ContactsInterface>(MOCK_CONTACT_LIST),
+    isLoading: false,
+    errors: "",
+    filter: {
+      search: "",
+      sortBy: SortByEnum.ASC,
+    },
+  },
+};
+
+export const MOCK_CONTACT_DETAIL_REDUCER = {
+  contactDetail: {
+    data: {
+      id: 0,
+      firstName: "",
+      lastName: "",
+      job: "",
+      description: "",
+    },
+    isLoading: true,
+    errors: "",
+    activeModalData: {
+      type: ModalTypeEnum.EMPTY,
+      id: -1,
+    },
+  },
+};
+
+export const MOCK_DELETE_CONTACT = {
+  contactDetail: {
+    data: mapToCamelCase<ContactInterface>(MOCK_CONTACT_LIST[0]),
+    isLoading: false,
+    errors: "",
+    activeModalData: {
+      type: ModalTypeEnum.DELETE,
+      id: 1,
+    },
+  },
+};
+
+export const MOCK_ADD_CONTACT = {
+  contactDetail: {
+    data: {
+      id: 0,
+      firstName: "",
+      lastName: "",
+      job: "",
+      description: "",
+    },
+    isLoading: false,
+    errors: "",
+    activeModalData: {
+      type: ModalTypeEnum.ADD,
+      id: 0,
+    },
   },
 };

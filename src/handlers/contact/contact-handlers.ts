@@ -1,5 +1,5 @@
 import { env } from "@/constants/env";
-import { MOCK_LIST_CONTACT } from "@/mocks/contact/contact-mock";
+import { MOCK_CONTACT_LIST } from "@/mocks/contact/contact-mock";
 import { rest } from "msw";
 
 export const contactHandlers = [
@@ -9,7 +9,7 @@ export const contactHandlers = [
       ctx.json({
         status_code: 200,
         message: "Success get contact list!",
-        data: MOCK_LIST_CONTACT,
+        data: MOCK_CONTACT_LIST,
       })
     );
   }),
@@ -20,7 +20,7 @@ export const contactHandlers = [
       ctx.json({
         status_code: 200,
         message: "Success get detail contact!",
-        data: MOCK_LIST_CONTACT[0],
+        data: MOCK_CONTACT_LIST[0],
       })
     );
   }),
@@ -48,7 +48,7 @@ export const contactHandlers = [
       ctx.json({
         status_code: 200,
         message: "Success delete contact!",
-        data: MOCK_LIST_CONTACT[0],
+        data: MOCK_CONTACT_LIST[0],
       })
     );
   }),
@@ -59,7 +59,7 @@ export const contactHandlers = [
       ctx.json({
         status_code: 200,
         message: "Success create contact!",
-        data: MOCK_LIST_CONTACT[0],
+        data: MOCK_CONTACT_LIST[0],
       })
     );
   }),

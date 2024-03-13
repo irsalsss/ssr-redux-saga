@@ -17,7 +17,7 @@ export interface ContactStateReducer {
   contact: ContactState;
 }
 
-const contactInitialState: ContactStateReducer = {
+export const contactInitialState: ContactStateReducer = {
   contact: {
     data: [],
     isLoading: true,

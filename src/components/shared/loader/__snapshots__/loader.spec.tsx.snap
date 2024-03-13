@@ -5,7 +5,13 @@ exports[`Loader should render loader successfully 1`] = `
   <div>
     <span
       class="loader"
-    />
+    >
+      <span
+        class="sr-only"
+      >
+        Loader
+      </span>
+    </span>
   </div>
 </body>
 `;

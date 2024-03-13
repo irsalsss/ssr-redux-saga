@@ -1,5 +1,5 @@
 import mapToCamelCase from "@/utils/map-to-camel-case/map-to-camel-case";
-import { MOCK_LIST_CONTACT } from "@/mocks/contact/contact-mock";
+import { MOCK_CONTACT_LIST } from "@/mocks/contact/contact-mock";
 import createContact from "./create-contact";
 
 describe("createContact", () => {
@@ -15,7 +15,7 @@ describe("createContact", () => {
       mapToCamelCase({
         status_code: 200,
         message: "Success create contact!",
-        data: MOCK_LIST_CONTACT[0],
+        data: MOCK_CONTACT_LIST[0],
       })
     );
   });

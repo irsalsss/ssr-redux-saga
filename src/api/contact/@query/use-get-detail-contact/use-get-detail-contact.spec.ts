@@ -5,7 +5,7 @@ import {
 } from "./use-get-detail-contact";
 import { wrapperReactQuery } from "@/utils/test/wrapper-testing";
 import mapToCamelCase from "@/utils/map-to-camel-case/map-to-camel-case";
-import { MOCK_LIST_CONTACT } from "@/mocks/contact/contact-mock";
+import { MOCK_CONTACT_LIST } from "@/mocks/contact/contact-mock";
 
 describe("useGetDetailContactsQuery", () => {
   it("should return GetDetailContacsOutput", async () => {
@@ -18,7 +18,7 @@ describe("useGetDetailContactsQuery", () => {
     });
 
     expect(result.current.data).toStrictEqual(
-      mapToCamelCase(MOCK_LIST_CONTACT[0])
+      mapToCamelCase(MOCK_CONTACT_LIST[0])
     );
   });
 
@@ -31,7 +31,7 @@ describe("useGetDetailContactsQuery", () => {
     );
 
     expect(await result.current).toStrictEqual(
-      mapToCamelCase(MOCK_LIST_CONTACT[0])
+      mapToCamelCase(MOCK_CONTACT_LIST[0])
     );
   });
 });

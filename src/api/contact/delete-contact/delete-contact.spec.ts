@@ -1,6 +1,6 @@
 import mapToCamelCase from "@/utils/map-to-camel-case/map-to-camel-case";
 import deleteContact from "./delete-contact";
-import { MOCK_LIST_CONTACT } from "@/mocks/contact/contact-mock";
+import { MOCK_CONTACT_LIST } from "@/mocks/contact/contact-mock";
 
 describe("deleteContact", () => {
   it("should return DeleteContactOutput", async () => {
@@ -10,7 +10,7 @@ describe("deleteContact", () => {
       mapToCamelCase({
         status_code: 200,
         message: "Success delete contact!",
-        data: MOCK_LIST_CONTACT[0],
+        data: MOCK_CONTACT_LIST[0],
       })
     );
   });
