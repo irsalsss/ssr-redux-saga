@@ -45,6 +45,9 @@ exports[`ContactHeader should render ContactHeader successfully 1`] = `
         Add
       </button>
     </div>
+    <div
+      class="Toastify"
+    />
   </div>
 </body>
 `;

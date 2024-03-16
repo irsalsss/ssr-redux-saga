@@ -664,6 +664,9 @@ exports[`ContactContainer should render ContactContainer successfully 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="Toastify"
+    />
   </div>
 </body>
 `;

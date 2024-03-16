@@ -2,8 +2,8 @@ import { AnyAction } from "redux-saga";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import ContactInterface from "@/interfaces/contact/contact.interface";
-import ContactDetailActionEnum from "@/enum/contact/contact-detail-action.enum";
 import ModalTypeEnum from "@/enum/shared/modal-type.enum";
+import ContactActionEnum from "@/enum/contact/contact-action.enum";
 
 interface ModalInterface {
   type: ModalTypeEnum;
@@ -40,7 +40,12 @@ export const contactDetailInitialState: ContactDetailStateReducer = {
 };
 
 export const getContactDetailActionDispatcher = (id: number) => ({
-  type: ContactDetailActionEnum.FETCH_CONTACT_DETAIL_REQUEST,
+  type: ContactActionEnum.FETCH_CONTACT_DETAIL_REQUEST,
+  payload: { id },
+});
+
+export const deleteContactActionDispatcher = (id: number) => ({
+  type: ContactActionEnum.DELETE_CONTACT_REQUEST,
   payload: { id },
 });
 
@@ -74,6 +79,20 @@ export const contactDetailSlice = createSlice({
       state.contactDetail.isLoading = false;
       state.contactDetail.errors = error;
     },
+
+    deleteContactAction: (state) => {
+      state.contactDetail.isLoading = true;
+      state.contactDetail.errors = "";
+    },
+    deleteContactSuccessAction: (state) => {
+      state.contactDetail.isLoading = false;
+      state.contactDetail.errors = "";
+      state.contactDetail = { ...contactDetailInitialState.contactDetail };
+    },
+    deleteContactErrorAction: (state) => {
+      state.contactDetail.isLoading = false;
+    },
+
     openModalContact: (
       state,
       { payload: modalData }: PayloadAction<ModalInterface>

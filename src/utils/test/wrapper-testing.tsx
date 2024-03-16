@@ -1,8 +1,11 @@
-import { RootState } from "@/reducers/root.reducer";
+import Toaster from "@/components/shared/toaster/toaster";
+import { RootState, setupStore } from "@/reducers/root.reducer";
+import { AppStore } from "@/store/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactNode } from "react";
+import { render } from "@testing-library/react";
+import type { RenderOptions } from "@testing-library/react";
+import { PropsWithChildren, ReactNode } from "react";
 import { Provider } from "react-redux";
-import configureStore from "redux-mock-store";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,15 +19,29 @@ export const wrapperReactQuery = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-export const WrapperRedux = ({
-  initialState,
-  children,
-}: {
-  children: ReactNode;
-  initialState: RootState;
-}) => {
-  const mockStore = configureStore();
-  const store = mockStore(initialState);
+interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
+  preloadedState?: Partial<RootState>;
+  store?: AppStore;
+}
 
-  return <Provider store={store}>{children}</Provider>;
-};
+export function renderWithProviders(
+  ui: React.ReactElement,
+  {
+    preloadedState = {},
+    // Automatically create a store instance if no store was passed in
+    store = setupStore(preloadedState),
+    ...renderOptions
+  }: ExtendedRenderOptions = {}
+) {
+  function Wrapper({ children }: PropsWithChildren<object>): JSX.Element {
+    return (
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+          <Toaster />
+        </QueryClientProvider>
+      </Provider>
+    );
+  }
+  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+}

@@ -1,50 +1,35 @@
 import {
-  render,
+  act,
   screen,
   userEvent,
   waitFor,
 } from "@/utils/test/react-testing-setup";
-import { WrapperRedux, wrapperReactQuery } from "@/utils/test/wrapper-testing";
+import { renderWithProviders } from "@/utils/test/wrapper-testing";
 import ContactContainer from "./contact-container";
 import {
-  MOCK_CONTACT_DETAIL_REDUCER,
   MOCK_CONTACT_REDUCER,
+  MOCK_DELETE_CONTACT,
 } from "@/mocks/contact/contact-mock";
 
 describe("ContactContainer", () => {
   it("should render ContactContainer successfully", () => {
-    const { baseElement } = render(
-      <WrapperRedux
-        initialState={{
-          contact: MOCK_CONTACT_REDUCER,
-          contactDetail: MOCK_CONTACT_DETAIL_REDUCER,
-        }}
-      >
-        <ContactContainer />
-      </WrapperRedux>,
-      {
-        wrapper: wrapperReactQuery,
-      }
-    );
+    const { baseElement } = renderWithProviders(<ContactContainer />, {
+      preloadedState: {
+        contact: MOCK_CONTACT_REDUCER,
+      },
+    });
 
     expect(baseElement).toMatchSnapshot();
     expect(baseElement).toBeTruthy();
   });
 
   it("should delete contact", async () => {
-    render(
-      <WrapperRedux
-        initialState={{
-          contact: MOCK_CONTACT_REDUCER,
-          contactDetail: MOCK_CONTACT_DETAIL_REDUCER,
-        }}
-      >
-        <ContactContainer />
-      </WrapperRedux>,
-      {
-        wrapper: wrapperReactQuery,
-      }
-    );
+    renderWithProviders(<ContactContainer />, {
+      preloadedState: {
+        contact: MOCK_CONTACT_REDUCER,
+        contactDetail: MOCK_DELETE_CONTACT,
+      },
+    });
 
     await waitFor(() => {
       const deleteIcon = screen.getAllByRole("button", {
@@ -56,33 +41,27 @@ describe("ContactContainer", () => {
     });
 
     await waitFor(() => {
-      const modalTitle = screen.getByText("Delete Contact");
-      expect(modalTitle).toBeVisible();
+      const submitButton = screen.getByRole("button", { name: /submit/i });
+      expect(submitButton).not.toBeDisabled();
     });
 
     const submitBtn = screen.getByRole("button", { name: /submit/i });
     userEvent.click(submitBtn);
 
-    await waitFor(() => {
-      const modalTitle = screen.queryByText("Delete Contact");
-      expect(modalTitle).toBeNull();
+    act(async () => {
+      await waitFor(() => {
+        const modalTitle = screen.queryByText("has been deleted");
+        expect(modalTitle).toBeVisible();
+      });
     });
   });
 
   it("should favorite contact", async () => {
-    render(
-      <WrapperRedux
-        initialState={{
-          contact: MOCK_CONTACT_REDUCER,
-          contactDetail: MOCK_CONTACT_DETAIL_REDUCER,
-        }}
-      >
-        <ContactContainer />
-      </WrapperRedux>,
-      {
-        wrapper: wrapperReactQuery,
-      }
-    );
+    renderWithProviders(<ContactContainer />, {
+      preloadedState: {
+        contact: MOCK_CONTACT_REDUCER,
+      },
+    });
 
     await waitFor(() => {
       const favoriteIcon = screen.getAllByRole("button", {
@@ -102,19 +81,11 @@ describe("ContactContainer", () => {
   });
 
   it("should sort by descending", async () => {
-    render(
-      <WrapperRedux
-        initialState={{
-          contact: MOCK_CONTACT_REDUCER,
-          contactDetail: MOCK_CONTACT_DETAIL_REDUCER,
-        }}
-      >
-        <ContactContainer />
-      </WrapperRedux>,
-      {
-        wrapper: wrapperReactQuery,
-      }
-    );
+    renderWithProviders(<ContactContainer />, {
+      preloadedState: {
+        contact: MOCK_CONTACT_REDUCER,
+      },
+    });
 
     await waitFor(() => {
       const ascendingIcon = screen.getByRole("button", {

@@ -572,6 +572,9 @@ exports[`ContactList should render ContactList successfully 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="Toastify"
+    />
   </div>
 </body>
 `;

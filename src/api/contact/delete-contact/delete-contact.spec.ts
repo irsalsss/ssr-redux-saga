@@ -6,12 +6,6 @@ describe("deleteContact", () => {
   it("should return DeleteContactOutput", async () => {
     const output = await deleteContact(1);
 
-    expect(output).toStrictEqual(
-      mapToCamelCase({
-        status_code: 200,
-        message: "Success delete contact!",
-        data: MOCK_CONTACT_LIST[0],
-      })
-    );
+    expect(output).toStrictEqual(mapToCamelCase(MOCK_CONTACT_LIST[0]));
   });
 });

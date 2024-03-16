@@ -31,6 +31,9 @@ exports[`ContactSearch should render ContactSearch successfully 1`] = `
         value=""
       />
     </div>
+    <div
+      class="Toastify"
+    />
   </div>
 </body>
 `;

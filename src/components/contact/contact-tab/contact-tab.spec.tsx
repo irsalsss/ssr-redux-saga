@@ -1,9 +1,9 @@
-import { render } from "@/utils/test/react-testing-setup";
 import ContactTab from "./contact-tab";
+import { renderWithProviders } from "@/utils/test/wrapper-testing";
 
 describe("ContactTab", () => {
   it("should render ContactTab successfully", () => {
-    const { baseElement } = render(<ContactTab />);
+    const { baseElement } = renderWithProviders(<ContactTab />);
 
     expect(baseElement).toMatchSnapshot();
     expect(baseElement).toBeTruthy();

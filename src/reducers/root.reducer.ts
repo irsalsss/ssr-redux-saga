@@ -1,4 +1,5 @@
-import { combineReducers } from "@reduxjs/toolkit";
+import createSagaMiddleware from "redux-saga";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { ContactStateReducer, contactReducer } from "./contact.reducer";
 import {
   ContactDetailStateReducer,
@@ -14,5 +15,19 @@ const rootReducer = combineReducers({
   contact: contactReducer,
   contactDetail: contactDetailReducer,
 });
+
+export const setupStore = (preloadedState?: Partial<RootState>) => {
+  const sagaMiddleware = createSagaMiddleware();
+
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        thunk: false,
+        serializableCheck: false,
+      }).concat(sagaMiddleware),
+  });
+};
 
 export default rootReducer;

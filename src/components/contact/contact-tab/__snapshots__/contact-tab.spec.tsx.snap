@@ -49,6 +49,9 @@ exports[`ContactTab should render ContactTab successfully 1`] = `
         </svg>
       </button>
     </div>
+    <div
+      class="Toastify"
+    />
   </div>
 </body>
 `;
