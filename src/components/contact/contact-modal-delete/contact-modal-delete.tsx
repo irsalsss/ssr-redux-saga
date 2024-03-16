@@ -4,7 +4,7 @@ import {
   contactDetailActions,
   deleteContactActionDispatcher,
   getContactDetailActionDispatcher,
-} from "@/reducers/contact-detail.reducer";
+} from "@/reducers/contact-detail/contact-detail.reducer";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import React, { useEffect, useMemo } from "react";
 

@@ -1,5 +1,5 @@
 import ContactContainer from "@/components/contact/contact-container/contact-container";
-import { getContactActionDispatcher } from "@/reducers/contact.reducer";
+import { getContactActionDispatcher } from "@/reducers/contact/contact.reducer";
 import { wrapper } from "@/store/store";
 import { END } from "redux-saga";
 

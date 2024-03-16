@@ -10,11 +10,11 @@ import useEditContact from "@/api/contact/@mutation/use-edit-contact/use-edit-co
 import { ERROR_NOT_FOUND } from "@/constants/error";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getContactActionDispatcher } from "@/reducers/contact.reducer";
+import { getContactActionDispatcher } from "@/reducers/contact/contact.reducer";
 import {
   contactDetailActions,
   getContactDetailActionDispatcher,
-} from "@/reducers/contact-detail.reducer";
+} from "@/reducers/contact-detail/contact-detail.reducer";
 import ContactForm from "../contact-form/contact-form";
 import { FormProvider, useForm } from "react-hook-form";
 import ModalTypeEnum from "@/enum/shared/modal-type.enum";

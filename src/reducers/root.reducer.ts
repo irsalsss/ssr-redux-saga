@@ -1,10 +1,10 @@
 import createSagaMiddleware from "redux-saga";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { ContactStateReducer, contactReducer } from "./contact.reducer";
+import { ContactStateReducer, contactReducer } from "./contact/contact.reducer";
 import {
   ContactDetailStateReducer,
   contactDetailReducer,
-} from "./contact-detail.reducer";
+} from "./contact-detail/contact-detail.reducer";
 
 export interface RootState {
   contact: ContactStateReducer;

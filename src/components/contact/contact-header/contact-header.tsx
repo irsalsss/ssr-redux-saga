@@ -1,7 +1,7 @@
 import Button from "@/components/shared/button/button";
 import ModalTypeEnum from "@/enum/shared/modal-type.enum";
 import ContactSearch from "../contact-search/contact-search";
-import { contactDetailActions } from "@/reducers/contact-detail.reducer";
+import { contactDetailActions } from "@/reducers/contact-detail/contact-detail.reducer";
 import { useAppDispatch } from "@/store/store";
 import { memo } from "react";
 

@@ -2,7 +2,7 @@ import ButtonIcon from "@/components/shared/button-icon/button-icon";
 import Tab from "@/components/shared/tab/tab";
 import ContactTabEnum from "@/enum/contact/contact-tab.enum";
 import SortByEnum from "@/enum/shared/sort-by.enum";
-import { contactActions } from "@/reducers/contact.reducer";
+import { contactActions } from "@/reducers/contact/contact.reducer";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import useContactStore from "@/stores/contact/use-contact-store";
 import { TextAlignBottomIcon, TextAlignTopIcon } from "@radix-ui/react-icons";

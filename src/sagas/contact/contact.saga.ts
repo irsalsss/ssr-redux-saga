@@ -10,11 +10,11 @@ import {
 import { notify } from "@/components/shared/toaster/toaster";
 import ContactActionEnum from "@/enum/contact/contact-action.enum";
 import ContactInterface from "@/interfaces/contact/contact.interface";
-import { contactDetailActions } from "@/reducers/contact-detail.reducer";
+import { contactDetailActions } from "@/reducers/contact-detail/contact-detail.reducer";
 import {
   contactActions,
   getContactActionDispatcher,
-} from "@/reducers/contact.reducer";
+} from "@/reducers/contact/contact.reducer";
 import { RootState } from "@/reducers/root.reducer";
 import { CustomError } from "@/utils/fetch-json/fetch-json";
 import { filterByContactInfo } from "@/utils/filter-by-contact-info/filter-by-contact-info";
@@ -24,7 +24,7 @@ import { call, put, select, takeLatest } from "redux-saga/effects";
 const getSearch = (state: RootState) => state.contact.contact.filter.search;
 
 // Worker Saga: handles the actual asynchronous operation
-function* fetchContactSaga(action: AnyAction) {
+export function* fetchContactSaga(action: AnyAction) {
   const search = action.payload.search;
 
   yield put(contactActions.getContactAction());

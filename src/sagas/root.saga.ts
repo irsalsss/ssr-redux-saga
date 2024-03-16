@@ -3,7 +3,7 @@ import {
   watchDeleteContact,
   watchGetContact,
   watchGetDetailContact,
-} from "./contact.saga";
+} from "./contact/contact.saga";
 
 export default function* rootSaga() {
   // Use the 'all' effect to run multiple sagas concurrently

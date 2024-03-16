@@ -1,5 +1,5 @@
 import Input from "@/components/shared/input/input";
-import { contactActions } from "@/reducers/contact.reducer";
+import { contactActions } from "@/reducers/contact/contact.reducer";
 import { useAppDispatch } from "@/store/store";
 import { useDebounce } from "@/utils/use-debounce/use-debounce";
 import useHasMounted from "@/utils/use-has-mounted/use-has-mounted";

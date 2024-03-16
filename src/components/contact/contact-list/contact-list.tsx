@@ -13,7 +13,7 @@ import {
 } from "@/utils/sort-by-first-last-name/sort-by-first-last-name";
 import ContactModalAddEdit from "../contact-modal-add-edit/contact-modal-add-edit";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { contactDetailActions } from "@/reducers/contact-detail.reducer";
+import { contactDetailActions } from "@/reducers/contact-detail/contact-detail.reducer";
 import ContactModalDelete from "../contact-modal-delete/contact-modal-delete";
 import SortByEnum from "@/enum/shared/sort-by.enum";
 
