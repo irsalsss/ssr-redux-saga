@@ -1,5 +1,6 @@
 import { all, fork } from "redux-saga/effects";
 import {
+  watchCreateContact,
   watchDeleteContact,
   watchGetContact,
   watchGetDetailContact,
@@ -10,6 +11,7 @@ export default function* rootSaga() {
   yield all([
     fork(watchGetContact),
     fork(watchGetDetailContact),
+    fork(watchCreateContact),
     fork(watchDeleteContact),
   ]);
 }

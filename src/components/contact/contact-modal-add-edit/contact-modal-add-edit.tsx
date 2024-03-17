@@ -1,4 +1,3 @@
-import useCreateContact from "@/api/contact/@mutation/use-create-contact/use-create-contact";
 import Modal from "@/components/shared/modal/modal";
 import { notify } from "@/components/shared/toaster/toaster";
 import ContactInterface, {
@@ -13,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getContactActionDispatcher } from "@/reducers/contact/contact.reducer";
 import {
   contactDetailActions,
+  createContactActionDispatcher,
   getContactDetailActionDispatcher,
 } from "@/reducers/contact-detail/contact-detail.reducer";
 import ContactForm from "../contact-form/contact-form";
@@ -35,6 +35,7 @@ const ContactModalAddEdit = ({
   const {
     data: contactDetail,
     isLoading,
+    isLoadingAddEdit,
     activeModalData,
   } = useAppSelector((state) => state.contactDetail.contactDetail);
 
@@ -50,9 +51,6 @@ const ContactModalAddEdit = ({
   const {
     formState: { isDirty, isValid },
   } = methods;
-
-  const { mutate: createContact, isPending: isLoadingCreateContact } =
-    useCreateContact();
 
   const { mutate: editContact, isPending: isLoadingEditContact } =
     useEditContact(activeId);
@@ -70,18 +68,7 @@ const ContactModalAddEdit = ({
     };
 
     if (isAddMode) {
-      createContact(payload, {
-        onSuccess: () => {
-          dispatch(getContactActionDispatcher(search));
-
-          notify("Successfully created");
-          handleClose();
-        },
-        onError: () => {
-          notify("Something went wrong, please try again");
-        },
-      });
-
+      dispatch(createContactActionDispatcher(payload));
       return;
     }
 
@@ -144,7 +131,7 @@ const ContactModalAddEdit = ({
       onClose={handleClose}
       onSubmit={methods.handleSubmit(onSubmit)}
       isDisableSubmit={
-        !isDirty || !isValid || isLoadingCreateContact || isLoadingEditContact
+        !isDirty || !isValid || isLoadingAddEdit || isLoadingEditContact
       }
       size='large'
     />

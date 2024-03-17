@@ -1,3 +1,6 @@
+import createContact, {
+  CreateContactInput,
+} from "@/api/contact/create-contact/create-contact";
 import deleteContact from "@/api/contact/delete-contact/delete-contact";
 import {
   GetDetailContactsOutput,
@@ -77,6 +80,32 @@ function* fetchDetailContactSaga(action: AnyAction) {
   }
 }
 
+function* createContactSaga(action: AnyAction) {
+  const payload = action.payload as CreateContactInput;
+
+  yield put(contactDetailActions.createContactAction());
+
+  try {
+    // Call the asynchronous function using 'call' effect
+    yield call(() => createContact(payload));
+
+    yield call(() => notify("Successfully created"));
+
+    // Dispatch a success action with the received data
+    yield put(contactDetailActions.createContactSuccessAction());
+
+    const search: string = yield select(getSearch);
+
+    yield put(getContactActionDispatcher(search));
+  } catch (error) {
+    const res = error as CustomError;
+    // Dispatch a failure action if an error occurs
+    yield put(contactDetailActions.createContactErrorAction());
+
+    yield call(() => notify(res.message));
+  }
+}
+
 function* deleteContactSaga(action: AnyAction) {
   const id = action.payload.id as number;
 
@@ -116,6 +145,10 @@ export function* watchGetDetailContact() {
     ContactActionEnum.FETCH_CONTACT_DETAIL_REQUEST,
     fetchDetailContactSaga
   );
+}
+
+export function* watchCreateContact() {
+  yield takeLatest(ContactActionEnum.CREATE_CONTACT_REQUEST, createContactSaga);
 }
 
 export function* watchDeleteContact() {

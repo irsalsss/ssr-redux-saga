@@ -4,7 +4,7 @@ import fetchJson from "@/utils/fetch-json/fetch-json";
 import mapToCamelCase from "@/utils/map-to-camel-case/map-to-camel-case";
 import mapToSnakeCase from "@/utils/map-to-snake-case/map-to-snake-case";
 
-type CreateContactInput = Omit<ContactInterface, "id"> & {
+export type CreateContactInput = Omit<ContactInterface, "id"> & {
   id?: number;
 };
 

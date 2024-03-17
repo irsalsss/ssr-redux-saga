@@ -4,6 +4,7 @@ import { HYDRATE } from "next-redux-wrapper";
 import ContactInterface from "@/interfaces/contact/contact.interface";
 import ModalTypeEnum from "@/enum/shared/modal-type.enum";
 import ContactActionEnum from "@/enum/contact/contact-action.enum";
+import { CreateContactInput } from "@/api/contact/create-contact/create-contact";
 
 interface ModalInterface {
   type: ModalTypeEnum;
@@ -13,6 +14,7 @@ interface ModalInterface {
 export interface ContactDetailState {
   data: ContactInterface;
   isLoading?: boolean;
+  isLoadingAddEdit?: boolean;
   errors?: string;
   activeModalData?: ModalInterface;
 }
@@ -31,6 +33,7 @@ export const contactDetailInitialState: ContactDetailStateReducer = {
       description: "",
     },
     isLoading: true,
+    isLoadingAddEdit: false,
     errors: "",
     activeModalData: {
       type: ModalTypeEnum.EMPTY,
@@ -47,6 +50,11 @@ export const getContactDetailActionDispatcher = (id: number) => ({
 export const deleteContactActionDispatcher = (id: number) => ({
   type: ContactActionEnum.DELETE_CONTACT_REQUEST,
   payload: { id },
+});
+
+export const createContactActionDispatcher = (payload: CreateContactInput) => ({
+  type: ContactActionEnum.CREATE_CONTACT_REQUEST,
+  payload,
 });
 
 export const contactDetailSlice = createSlice({
@@ -78,6 +86,19 @@ export const contactDetailSlice = createSlice({
     ) => {
       state.contactDetail.isLoading = false;
       state.contactDetail.errors = error;
+    },
+
+    createContactAction: (state) => {
+      state.contactDetail.isLoadingAddEdit = true;
+      state.contactDetail.errors = "";
+    },
+    createContactSuccessAction: (state) => {
+      state.contactDetail.isLoadingAddEdit = false;
+      state.contactDetail.errors = "";
+      state.contactDetail = { ...contactDetailInitialState.contactDetail };
+    },
+    createContactErrorAction: (state) => {
+      state.contactDetail.isLoadingAddEdit = false;
     },
 
     deleteContactAction: (state) => {
