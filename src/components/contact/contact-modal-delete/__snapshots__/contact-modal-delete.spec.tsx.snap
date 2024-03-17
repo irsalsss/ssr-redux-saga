@@ -66,6 +66,9 @@ exports[`ContactModalDelete should render ContactModalDelete successfully 1`] = 
         </div>
       </div>
     </div>
+    <div
+      class="Toastify"
+    />
   </div>
 </body>
 `;

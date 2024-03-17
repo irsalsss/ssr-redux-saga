@@ -4,10 +4,8 @@ import ContactTabEnum from "@/enum/contact/contact-tab.enum";
 import SortByEnum from "@/enum/shared/sort-by.enum";
 import { contactActions } from "@/reducers/contact/contact.reducer";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import useContactStore from "@/stores/contact/use-contact-store";
 import { TextAlignBottomIcon, TextAlignTopIcon } from "@radix-ui/react-icons";
 import { memo, useMemo } from "react";
-import { useShallow } from "zustand/react/shallow";
 
 const tabOptions = [
   {
@@ -24,17 +22,14 @@ const ContactTab = () => {
   const dispatch = useAppDispatch();
 
   const sortBy = useAppSelector((state) => state.contact.contact.filter.sortBy);
-
-  const [activeTab, setActiveTab] = useContactStore(
-    useShallow((state) => [state.activeTab, state.setActiveTab])
-  );
+  const activeTab = useAppSelector((state) => state.contact.contact.activeTab);
 
   const handleSort = () => {
     dispatch(contactActions.setSortBy());
   };
 
   const handleClickTab = (value: string) => {
-    setActiveTab(value as ContactTabEnum);
+    dispatch(contactActions.setActiveTab(value as ContactTabEnum));
   };
 
   const isAscending = useMemo(() => {

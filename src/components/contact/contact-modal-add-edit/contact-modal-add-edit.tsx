@@ -1,36 +1,20 @@
 import Modal from "@/components/shared/modal/modal";
-import { notify } from "@/components/shared/toaster/toaster";
-import ContactInterface, {
-  ContactFormField,
-} from "@/interfaces/contact/contact.interface";
+import { ContactFormField } from "@/interfaces/contact/contact.interface";
 import { useEffect } from "react";
 import Loader from "@/components/shared/loader/loader";
-import useEditContact from "@/api/contact/@mutation/use-edit-contact/use-edit-contact";
-import { ERROR_NOT_FOUND } from "@/constants/error";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getContactActionDispatcher } from "@/reducers/contact/contact.reducer";
 import {
   contactDetailActions,
   createContactActionDispatcher,
+  editContactActionDispatcher,
   getContactDetailActionDispatcher,
 } from "@/reducers/contact-detail/contact-detail.reducer";
 import ContactForm from "../contact-form/contact-form";
 import { FormProvider, useForm } from "react-hook-form";
 import ModalTypeEnum from "@/enum/shared/modal-type.enum";
 
-interface ContactModalAddEditProps {
-  favoriteContacts: Record<number, ContactInterface>;
-}
-
-const ContactModalAddEdit = ({
-  favoriteContacts,
-}: ContactModalAddEditProps) => {
+const ContactModalAddEdit = () => {
   const dispatch = useAppDispatch();
-  const queryClient = useQueryClient();
-
-  const search =
-    useAppSelector((state) => state.contact.contact.filter.search) || "";
 
   const {
     data: contactDetail,
@@ -52,9 +36,6 @@ const ContactModalAddEdit = ({
     formState: { isDirty, isValid },
   } = methods;
 
-  const { mutate: editContact, isPending: isLoadingEditContact } =
-    useEditContact(activeId);
-
   const handleClose = () => {
     dispatch(contactDetailActions.resetContactDetail());
   };
@@ -72,40 +53,7 @@ const ContactModalAddEdit = ({
       return;
     }
 
-    editContact(
-      { ...payload, id: activeId },
-      {
-        onSuccess: () => {
-          dispatch(getContactActionDispatcher(search));
-
-          queryClient.resetQueries({
-            queryKey: ["useGetDetailContactsQuery", activeId],
-            exact: true,
-          });
-
-          const isFavorite = Object.prototype.hasOwnProperty.call(
-            favoriteContacts,
-            activeId
-          );
-          if (isFavorite) {
-            favoriteContacts[activeId] = { ...payload, id: activeId };
-          }
-
-          localStorage.setItem("favorites", JSON.stringify(favoriteContacts));
-
-          notify("Successfully edited");
-          handleClose();
-        },
-        onError: (response) => {
-          if (response.statusCode === ERROR_NOT_FOUND) {
-            notify(response.message);
-            return;
-          }
-
-          notify(`Something went wrong, please try again`);
-        },
-      }
-    );
+    dispatch(editContactActionDispatcher({ ...payload, id: activeId }));
   };
 
   useEffect(() => {
@@ -130,9 +78,7 @@ const ContactModalAddEdit = ({
       content={!isAddMode && isLoading ? loaderContent : content}
       onClose={handleClose}
       onSubmit={methods.handleSubmit(onSubmit)}
-      isDisableSubmit={
-        !isDirty || !isValid || isLoadingAddEdit || isLoadingEditContact
-      }
+      isDisableSubmit={!isDirty || !isValid || isLoadingAddEdit}
       size='large'
     />
   );

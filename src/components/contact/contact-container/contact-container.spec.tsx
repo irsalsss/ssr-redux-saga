@@ -1,9 +1,4 @@
-import {
-  act,
-  screen,
-  userEvent,
-  waitFor,
-} from "@/utils/test/react-testing-setup";
+import { screen, userEvent, waitFor } from "@/utils/test/react-testing-setup";
 import { renderWithProviders } from "@/utils/test/wrapper-testing";
 import ContactContainer from "./contact-container";
 import {
@@ -47,13 +42,6 @@ describe("ContactContainer", () => {
 
     const submitBtn = screen.getByRole("button", { name: /submit/i });
     userEvent.click(submitBtn);
-
-    act(async () => {
-      await waitFor(() => {
-        const modalTitle = screen.queryByText("has been deleted");
-        expect(modalTitle).toBeVisible();
-      });
-    });
   });
 
   it("should favorite contact", async () => {

@@ -1,16 +1,22 @@
-import { ContactsInterface } from "@/interfaces/contact/contact.interface";
+import {
+  ContactsInterface,
+  FavoriteContacts,
+} from "@/interfaces/contact/contact.interface";
 import { AnyAction } from "redux-saga";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import ContactActionEnum from "@/enum/contact/contact-action.enum";
 import FilterInterface from "@/interfaces/shared/filter.interface";
 import SortByEnum from "@/enum/shared/sort-by.enum";
+import ContactTabEnum from "@/enum/contact/contact-tab.enum";
 
 export interface ContactState {
   data: ContactsInterface;
   isLoading?: boolean;
   errors?: string;
   filter: FilterInterface;
+  activeTab?: ContactTabEnum;
+  favoriteContacts?: FavoriteContacts;
 }
 
 export interface ContactStateReducer {
@@ -26,6 +32,8 @@ export const contactInitialState: ContactStateReducer = {
       search: "",
       sortBy: SortByEnum.ASC,
     },
+    activeTab: ContactTabEnum.ALL,
+    favoriteContacts: {},
   },
 };
 
@@ -57,6 +65,21 @@ export const contactSlice = createSlice({
           ? SortByEnum.DESC
           : SortByEnum.ASC;
     },
+
+    setActiveTab: (
+      state: ContactStateReducer,
+      { payload: activeTab }: PayloadAction<ContactTabEnum>
+    ) => {
+      state.contact.activeTab = activeTab;
+    },
+
+    setFavoriteContacts: (
+      state: ContactStateReducer,
+      { payload: favoriteContacts }: PayloadAction<FavoriteContacts>
+    ) => {
+      state.contact.favoriteContacts = favoriteContacts;
+    },
+
     getContactAction: (state: ContactStateReducer) => {
       state.contact.isLoading = true;
       state.contact.errors = "";

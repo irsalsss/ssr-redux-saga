@@ -6,6 +6,10 @@
   position: relative;
   align-items: flex-start;
   width: 400px;
+
+  @media only screen and (max-width: 1024px) {
+    width: 100%;
+  }
 }
 
 .contact-container {

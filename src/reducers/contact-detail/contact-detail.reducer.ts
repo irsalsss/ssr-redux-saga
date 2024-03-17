@@ -57,6 +57,11 @@ export const createContactActionDispatcher = (payload: CreateContactInput) => ({
   payload,
 });
 
+export const editContactActionDispatcher = (payload: ContactInterface) => ({
+  type: ContactActionEnum.EDIT_CONTACT_REQUEST,
+  payload,
+});
+
 export const contactDetailSlice = createSlice({
   name: "contactDetail",
   initialState: contactDetailInitialState,
@@ -88,16 +93,16 @@ export const contactDetailSlice = createSlice({
       state.contactDetail.errors = error;
     },
 
-    createContactAction: (state) => {
+    createEditContactAction: (state) => {
       state.contactDetail.isLoadingAddEdit = true;
       state.contactDetail.errors = "";
     },
-    createContactSuccessAction: (state) => {
+    createEditContactSuccessAction: (state) => {
       state.contactDetail.isLoadingAddEdit = false;
       state.contactDetail.errors = "";
       state.contactDetail = { ...contactDetailInitialState.contactDetail };
     },
-    createContactErrorAction: (state) => {
+    createEditContactErrorAction: (state) => {
       state.contactDetail.isLoadingAddEdit = false;
     },
 

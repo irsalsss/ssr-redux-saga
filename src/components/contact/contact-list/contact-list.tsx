@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
 import ContactCard from "../contact-card/contact-card";
-import useContactStore from "@/stores/contact/use-contact-store";
-import { useShallow } from "zustand/react/shallow";
 import { notify } from "@/components/shared/toaster/toaster";
 import ModalTypeEnum from "@/enum/shared/modal-type.enum";
 import ContactInterface from "@/interfaces/contact/contact.interface";
@@ -16,32 +14,26 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { contactDetailActions } from "@/reducers/contact-detail/contact-detail.reducer";
 import ContactModalDelete from "../contact-modal-delete/contact-modal-delete";
 import SortByEnum from "@/enum/shared/sort-by.enum";
+import { contactActions } from "@/reducers/contact/contact.reducer";
 
 const ContactList = () => {
   const dispatch = useAppDispatch();
 
-  const { data: contacts, isLoading } = useAppSelector(
-    (state) => state.contact.contact
+  const {
+    data: contacts,
+    isLoading,
+    activeTab,
+    favoriteContacts = {},
+  } = useAppSelector((state) => state.contact.contact);
+
+  const { search = "", sortBy } = useAppSelector(
+    (state) => state.contact.contact.filter
   );
-
-  const search =
-    useAppSelector((state) => state.contact.contact.filter.search) || "";
-
-  const sortBy = useAppSelector((state) => state.contact.contact.filter.sortBy);
 
   const isAscending = sortBy === SortByEnum.ASC;
 
   const activeModalData = useAppSelector(
     (state) => state.contactDetail.contactDetail.activeModalData
-  );
-
-  const [activeTab, favoriteContacts, setFavoriteContacts] = useContactStore(
-    useShallow((state) => [
-      state.activeTab,
-
-      state.favoriteContacts,
-      state.setFavoriteContacts,
-    ])
   );
 
   const handleOpenModalDelete = (contact: ContactInterface) => {
@@ -88,7 +80,7 @@ const ContactList = () => {
         );
       }
 
-      setFavoriteContacts(currentFavorites);
+      dispatch(contactActions.setFavoriteContacts(currentFavorites));
       localStorage.setItem("favorites", JSON.stringify(currentFavorites));
     },
     [favoriteContacts]
@@ -122,7 +114,7 @@ const ContactList = () => {
 
     if (localFavorites) {
       const favContacs = JSON.parse(localFavorites);
-      setFavoriteContacts(favContacs ?? {});
+      dispatch(contactActions.setFavoriteContacts(favContacs ?? {}));
     }
   }, []);
 
@@ -137,7 +129,7 @@ const ContactList = () => {
         </div>
       ) : null}
 
-      <div className='flex flex-wrap gap-4 px-4 mt-4 justify-center'>
+      <div className='gap-4 px-4 mt-4 grid-cols-3'>
         {currentContacts.map((contact) => (
           <ContactCard
             key={contact.id}
@@ -160,7 +152,7 @@ const ContactList = () => {
       {[ModalTypeEnum.ADD, ModalTypeEnum.EDIT].includes(
         activeModalData!.type
       ) ? (
-        <ContactModalAddEdit favoriteContacts={favoriteContacts} />
+        <ContactModalAddEdit />
       ) : null}
     </>
   );

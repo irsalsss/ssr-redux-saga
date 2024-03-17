@@ -1,3 +1,4 @@
+import ContactTabEnum from "@/enum/contact/contact-tab.enum";
 import ModalTypeEnum from "@/enum/shared/modal-type.enum";
 import SortByEnum from "@/enum/shared/sort-by.enum";
 import ContactInterface, {
@@ -62,6 +63,8 @@ export const MOCK_CONTACT_REDUCER = {
       search: "",
       sortBy: SortByEnum.ASC,
     },
+    activeTab: ContactTabEnum.ALL,
+    favoriteContacts: MOCK_CONTACT_FAVORITE,
   },
 };
 
