@@ -35,12 +35,14 @@ const getFavoriteContacts = (state: RootState) =>
 export function* fetchContactSaga(action: AnyAction) {
   const search = action.payload.search;
 
+  // trigger loading
   yield put(contactActions.getContactAction());
 
   try {
     // Call the asynchronous function using 'call' effect
     const data: GetContactsOutput = yield call(getContacts);
 
+    // if search params is set, then do filter
     const filteredData = data.filter((contact) =>
       filterByContactInfo(contact, search)
     );
@@ -61,10 +63,12 @@ export function* fetchContactSaga(action: AnyAction) {
 function* fetchDetailContactSaga(action: AnyAction) {
   const id = action.payload.id as number;
 
+  // The ID 0 treated as a create functionality, so it will not fetch the detail API
   if (id === 0) {
     return;
   }
 
+  // trigger loading
   yield put(contactDetailActions.getContactDetailAction());
 
   try {
@@ -88,6 +92,7 @@ function* fetchDetailContactSaga(action: AnyAction) {
 function* createContactSaga(action: AnyAction) {
   const payload = action.payload as CreateContactInput;
 
+  // trigger loading
   yield put(contactDetailActions.createEditContactAction());
 
   try {
@@ -97,16 +102,19 @@ function* createContactSaga(action: AnyAction) {
     // Dispatch a success action with the received data
     yield put(contactDetailActions.createEditContactSuccessAction());
 
+    // show the toaster
     yield call(() => notify("Successfully created"));
 
     const search: string = yield select(getSearch);
 
+    // refetch contact list
     yield put(getContactActionDispatcher(search));
   } catch (error) {
     const res = error as CustomError;
     // Dispatch a failure action if an error occurs
     yield put(contactDetailActions.createEditContactErrorAction());
 
+    // show the toaster
     yield call(() => notify(res.message));
   }
 }
@@ -115,6 +123,7 @@ function* editContactSaga(action: AnyAction) {
   const payload = action.payload as ContactInterface;
   const id = payload.id;
 
+  // trigger loading
   yield put(contactDetailActions.createEditContactAction());
 
   try {
@@ -124,36 +133,42 @@ function* editContactSaga(action: AnyAction) {
     // Dispatch a success action with the received data
     yield put(contactDetailActions.createEditContactSuccessAction());
 
+    // show the toaster
     yield call(() => notify("Successfully edited"));
 
+    // get current favorite contacts
     const favoriteContacts: FavoriteContacts = {
       ...(yield select(getFavoriteContacts)),
     };
-
-    const search: string = yield select(getSearch);
-
-    yield put(getContactActionDispatcher(search));
 
     const isFavorite = Object.prototype.hasOwnProperty.call(
       favoriteContacts,
       id
     );
 
+    // if the contact is favorited, then update list
     if (isFavorite) {
       favoriteContacts[id] = { ...payload, id: id };
     }
 
+    // set to localstorage with the updated list
     try {
       localStorage.setItem("favorites", JSON.stringify(favoriteContacts));
     } catch (error) {
       // Handle localStorage error
       console.error("Error setting favorite contacts to localStorage:", error);
     }
+
+    const search: string = yield select(getSearch);
+
+    // refetch contact list
+    yield put(getContactActionDispatcher(search));
   } catch (error) {
     const res = error as CustomError;
     // Dispatch a failure action if an error occurs
     yield put(contactDetailActions.createEditContactErrorAction());
 
+    // show the toaster
     yield call(() => notify(res.message));
   }
 }
@@ -167,6 +182,7 @@ function* deleteContactSaga(action: AnyAction) {
     // Call the asynchronous function using 'call' effect
     const contactDetail: ContactInterface = yield call(() => deleteContact(id));
 
+    // show the toaster
     yield call(() =>
       notify(
         `${contactDetail.firstName} ${contactDetail.lastName} has been deleted`
@@ -178,12 +194,14 @@ function* deleteContactSaga(action: AnyAction) {
 
     const search: string = yield select(getSearch);
 
+    // refetch contact list
     yield put(getContactActionDispatcher(search));
   } catch (error) {
     const res = error as CustomError;
     // Dispatch a failure action if an error occurs
     yield put(contactDetailActions.deleteContactErrorAction());
 
+    // show the toaster
     yield call(() => notify(res.message));
   }
 }
