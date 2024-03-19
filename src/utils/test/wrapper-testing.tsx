@@ -1,6 +1,6 @@
 import Toaster from "@/components/shared/toaster/toaster";
-import { RootState, setupStore } from "@/reducers/root.reducer";
-import { AppStore } from "@/store/store";
+import { RootState } from "@/reducers/root.reducer";
+import { AppStore, setupStore } from "@/store/store";
 import { render } from "@testing-library/react";
 import type { RenderOptions } from "@testing-library/react";
 import { PropsWithChildren } from "react";

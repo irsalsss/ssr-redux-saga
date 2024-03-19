@@ -31,6 +31,21 @@ export const makeStore = () => {
   return store;
 };
 
+// for testing setup
+export const setupStore = (preloadedState?: Partial<RootState>) => {
+  const sagaMiddleware = createSagaMiddleware();
+
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        thunk: false,
+        serializableCheck: false,
+      }).concat(sagaMiddleware),
+  });
+};
+
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];
