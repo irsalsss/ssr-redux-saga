@@ -1,26 +1,20 @@
 import ContactInterface from "@/interfaces/contact/contact.interface";
 import style from "./contact-card.module.scss";
-import {
-  StarIcon,
-  StarFilledIcon,
-  Pencil2Icon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
+import { StarIcon, StarFilledIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import ButtonIcon from "@/components/shared/button-icon/button-icon";
+import ContactDeleteButton from "../contact-delete-button/contact-delete-button";
 
 interface ContactCardProps {
   contact: ContactInterface;
   isFavorite?: boolean;
   onEditContact: () => void;
   onFavoriteContact: () => void;
-  onDeleteContact: () => void;
 }
 
 const ContactCard = ({
   contact,
   isFavorite,
   onEditContact,
-  onDeleteContact,
   onFavoriteContact,
 }: ContactCardProps) => {
   return (
@@ -59,9 +53,7 @@ const ContactCard = ({
           <Pencil2Icon />
         </ButtonIcon>
 
-        <ButtonIcon label='delete-icon' onClick={onDeleteContact}>
-          <TrashIcon />
-        </ButtonIcon>
+        <ContactDeleteButton contact={contact} />
       </div>
     </div>
   );

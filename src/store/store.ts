@@ -54,4 +54,5 @@ export type AppDispatch = AppStore["dispatch"];
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+// for ssr implementation
 export const wrapper = createWrapper(makeStore);

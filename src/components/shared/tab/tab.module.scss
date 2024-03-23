@@ -2,6 +2,7 @@
   transition: all 0.3s ease-in-out;
   padding: 8px;
   cursor: pointer;
+  border-bottom: solid 4px white;
 
   span {
     font-size: 16px;
@@ -10,5 +11,5 @@
 }
 
 .tab-active {
-  border-bottom: solid 4px #222;
+  border-color: #222;
 }

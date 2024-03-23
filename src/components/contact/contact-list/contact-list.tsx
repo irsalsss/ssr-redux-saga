@@ -36,25 +36,6 @@ const ContactList = () => {
     (state) => state.contactDetail.contactDetail.activeModalData
   );
 
-  const handleOpenModalDelete = (contact: ContactInterface) => {
-    const isFavorite = Object.prototype.hasOwnProperty.call(
-      favoriteContacts,
-      contact.id
-    );
-
-    if (isFavorite) {
-      notify(`You can't delete it. Please unfavorite first`);
-      return;
-    }
-
-    dispatch(
-      contactDetailActions.openModalContact({
-        type: ModalTypeEnum.DELETE,
-        id: contact.id,
-      })
-    );
-  };
-
   const handleOpenModalEdit = (contact: ContactInterface) => {
     dispatch(
       contactDetailActions.openModalContact({
@@ -140,7 +121,6 @@ const ContactList = () => {
             )}
             onEditContact={() => handleOpenModalEdit(contact)}
             onFavoriteContact={() => handleFavoriteContact(contact)}
-            onDeleteContact={() => handleOpenModalDelete(contact)}
           />
         ))}
       </div>
